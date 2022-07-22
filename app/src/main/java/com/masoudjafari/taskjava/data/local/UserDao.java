@@ -4,28 +4,36 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
+
+import io.reactivex.Completable;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 @Dao
 public interface UserDao {
 
-    @Query("SELECT * FROM User")
-    List<User> getAll();
-
-    @Query("SELECT * FROM User WHERE id IN (:id)")
-    List<User> loadById(String id);
-
     @Insert
-    void insertData(List<User> users);
+    Completable insertData(List<User> users);
 
     @Delete
-    void delete(User customer);
+    Single<Integer> delete(User user);
+
+    @Update
+    Maybe<Integer> update(User user);
+
+    @Query("SELECT * FROM User")
+    Single<List<User>> getAll();
+
+    @Query("SELECT * FROM User WHERE id IN (:id)")
+    Single<List<User>> loadById(String id);
 
     @Query("DELETE FROM User")
-    void nukeTable();
+    Completable nukeTable();
 
     @Query("UPDATE  User SET id =:id, name =:name")
-    void update(String id, String name);
+    Completable update(String id, String name);
 
 }
